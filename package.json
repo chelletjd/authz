@@ -7,19 +7,30 @@
     "test": "jest",
     "build": "tsc --project tsconfig.compile.json",
     "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "proxy": "ory proxy --no-jwt --port 4000 http://localhost:3000/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ory/cli": "^1.0.0-alpha.2",
+    "@ory/client": "^1.15.0",
+    "@ory/elements-markup": "^0.5.0",
+    "@ory/kratos-client": "^1.2.1",
+    "accept-language-parser": "^1.5.0",
+    "body-parser": "^1.20.3",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.0",
+    "express-handlebars": "^8.0.1",
     "express-openid-connect": "^2.17.1",
-    "supertest": "^7.0.0"
+    "express-winston": "^4.2.0",
+    "supertest": "^7.0.0",
+    "winston": "^3.14.2"
   },
   "devDependencies": {
+    "@types/accept-language-parser": "^1.5.6",
     "@types/chai": "^4.3.19",
     "@types/chai-http": "^4.2.0",
     "@types/express": "^4.17.21",

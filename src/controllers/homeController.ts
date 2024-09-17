@@ -4,6 +4,8 @@ import { requiresAuth } from 'express-openid-connect';
 
 const HomeController = express.Router()
 
-HomeController.get('/', requiresAuth(), login)
+HomeController.get('/', (req: express.Request, res: express.Response) => {
+  res.redirect("/login")
+})
 
 export default HomeController;

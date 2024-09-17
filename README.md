@@ -10,11 +10,17 @@ This is an authz project implementing [ORY](https://www.ory.sh/)
     npm install
     ```
 
-2. Start the app
+  2. Start the app
 
-    ```bash
-    npm run dev
-    ```
+      In two separete terminals run the following commands 
+
+        ```bash
+        npm run dev
+        ```
+
+        ```bash
+        ory tunnel --dev --project <project_id> --workspace <workspace>  http://localhost:3000
+        ```
 
 3. To run the test
 

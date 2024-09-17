@@ -1,7 +1,7 @@
 import request from 'supertest'; 
 import app from '../src/app'; 
 import sinon from 'sinon';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, response } from 'express';
 
 const mockFetchUserInfo = jest.fn().mockResolvedValue({
   name: 'Mock User',
@@ -70,15 +70,19 @@ describe('GET / - OIDC Authentication', () => {
     app.use(requiresAuthStub);
   });
 
-  it('should return user info and tokens when authenticated', async () => {
+  it('should send the user to login', async () => {
     
     const response = await request(app).get('/');
 
-    expect(response.status).toBe(200);
-    expect(response.text).toContain('mockAccessToken');
-    expect(response.text).toContain('mockRefreshToken');
-    expect(response.text).toContain('mockIdToken');
-    expect(response.text).toContain('Mock User');
-    expect(response.text).toContain('user@example.com');
+    expect(response.status).toBe(302);
+    expect(response.headers['location']).toBe('/login');
+  });
+
+  it('should validate the url', async () => {
+    
+    const response = await request(app).get('/login');
+
+    expect(response.status).toBe(303);
+    expect(response.headers['location']).toBe('http://localhost:4000/self-service/login/browser?aal=&refresh=&return_to=&organization=&via=');
   });
 });

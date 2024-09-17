@@ -1,36 +1,26 @@
 import Express from 'express';
+var sdk = require("@ory/client")
+
+var ory = new sdk.FrontendApi(
+  new sdk.Configuration({
+    basePath:
+      process.env.ORY_SDK_URL || "https://playground.projects.oryapis.com",
+  }),
+)
 
 // Login ory service
 export function login (req: Express.Request, res: Express.Response) {
-  req.oidc.fetchUserInfo().then((userInfo: any) => {
-
-    res.render('response', {
-      response: JSON.stringify(
-        {
-          accessToken: req.oidc.accessToken,
-          refreshToken: req.oidc.refreshToken,
-          idToken: req.oidc.idToken,
-          idTokenClaims: req.oidc.idTokenClaims,
-          userInfo,
-        },
-        null,
-        2,
-      ),
-      email: userInfo.email,
-      accessToken: req.oidc.accessToken?.access_token,
+  ory
+    .toSession({ cookie: req.header("cookie") })
+    .then(({ data: session }: any) => {
+      res.render("index", {
+        title: "Express",
+        // Our identity is stored in the session along with other useful information.
+        identity: session.identity,
+      })
     })
-    // res.send(
-    //   `<html lang='en'><body><pre><code>${JSON.stringify(
-    //     {
-    //       accessToken: req.oidc.accessToken,
-    //       refreshToken: req.oidc.refreshToken,
-    //       idToken: req.oidc.idToken,
-    //       idTokenClaims: req.oidc.idTokenClaims,
-    //       userInfo,
-    //     },
-    //     null,
-    //     2,
-    //   )}</code></pre></body></html>`,
-    // )
-  })
+    .catch(() => {
+      // If logged out, send to login page
+      res.redirect("/login")
+    })
 }
